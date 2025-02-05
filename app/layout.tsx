@@ -10,8 +10,8 @@ import "react-datepicker/dist/react-datepicker.css";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-	title: "meet",
-	description: "meet navi",
+	title: "Collab-up",
+	description: "A workspace for your team, powered by Stream Chat and Clerk.",
 };
 
 export default function RootLayout({

@@ -1,14 +1,19 @@
-import StreamVideoProvider from '@/providers/StreamClientProvider'
-import React, { ReactNode } from 'react'
 
-const RootLayout = ({children } : {children: ReactNode}) => {
-  return (
-    <main>
-      <StreamVideoProvider>
-      {children}
-      </StreamVideoProvider>
-    </main>
-  )
-}
+import StreamVideoProvider from "@/providers/StreamClientProvider";
+import { Metadata } from "next";
+import React, { ReactNode } from "react";
 
-export default RootLayout
+export const metadata: Metadata = {
+  title: 'Collab-Up',
+  description: 'A workspace for your team, powered by Stream Chat and Clerk.',
+};
+
+const layout = ({ children }: Readonly<{ children: ReactNode }>) => {
+	return (
+		<main>
+			<StreamVideoProvider>{children}</StreamVideoProvider>
+		</main>
+	);
+};
+
+export default layout;

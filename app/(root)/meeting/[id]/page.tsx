@@ -1,49 +1,34 @@
-'use client';
+"use client";
+import Loader from "@/components/Loader";
+import MeetingRoom from "@/components/MeetingRoom";
+import MeetingSetup from "@/components/MeetingSetup";
+import { useGetCallById } from "@/hooks/useGetCallsById";
+import { useUser } from "@clerk/nextjs";
+import { StreamCall, StreamTheme } from "@stream-io/video-react-sdk";
+import React, { useState } from "react";
 
-import { useState } from 'react';
-import { useUser } from '@clerk/nextjs';
-import { StreamCall, StreamTheme } from '@stream-io/video-react-sdk';
-import { useParams } from 'next/navigation';
-import { Loader } from 'lucide-react';
-
-import { useGetCallById } from '@/hooks/useGetCallsById';
-import Alert from '@/components/Alert';
-import MeetingSetup from '@/components/MeetingSetup';
-import MeetingRoom from '@/components/MeetingRoom';
-
-const MeetingPage = () => {
-  const { id } = useParams();
-  const { isLoaded, user } = useUser();
-  const { call, isCallLoading } = useGetCallById(id);
-  const [isSetupComplete, setIsSetupComplete] = useState(false);
-
-  if (!isLoaded || isCallLoading) return <Loader />;
-
-  if (!call) return (
-    <p className="text-center text-3xl font-bold text-white">
-      Call Not Found
-    </p>
-  );
-
-  // https://getstream.io/video/docs/react/guides/configuring-call-types/
-  const notAllowed = call.type === 'invited' && (!user || !call.state.members.find((m) => m.user.id === user.id));
-
-  if (notAllowed) return <Alert title="You are not allowed to join this meeting" />;
-
-  return (
-    <main className="h-screen w-full">
-      <StreamCall call={call}>
-        <StreamTheme>
-
-        {!isSetupComplete ? (
-          <MeetingSetup setIsSetupComplete={setIsSetupComplete} />
-        ) : (
-          <MeetingRoom />
-        )}
-        </StreamTheme>
-      </StreamCall>
-    </main>
-  );
+const Meeting = ({ params: { id } }: { params: { id: string } }) => {
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
+	const { user, isLoaded } = useUser();
+	const [isSetupComplete, setIsSetupComplete] = useState(false);
+	const { call, isCallLoading } = useGetCallById(id);
+	if (!isLoaded || isCallLoading) return <Loader />;
+	return (
+		<main className='h-screen w-full'>
+			{/* to get the call we are in addig a hook*/}
+			{/* call={} */}
+			<StreamCall call={call}>
+				<StreamTheme>
+					{!isSetupComplete ? (
+						<MeetingSetup setIsSetupComplete={setIsSetupComplete} />
+					) : (
+						<MeetingRoom />
+					)}
+				</StreamTheme>
+			</StreamCall>
+			Meeting Room: #{id}
+		</main>
+	);
 };
 
-export default MeetingPage;
+export default Meeting;

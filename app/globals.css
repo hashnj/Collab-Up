@@ -10,6 +10,15 @@
 	box-sizing: border-box;
 }
 
+.no-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+.no-scroll {
+  -ms-overflow-style: none;
+  scrollbar-width: none;  
+}
+
 /* ======== stream css overrides ======== */
 .str-video__call-stats {
 	max-width: 500px;

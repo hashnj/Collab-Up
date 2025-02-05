@@ -1,14 +1,14 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { NextApiRequest } from "next";
-import { NextResponse } from "next/server";
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import { NextRequest, NextResponse } from "next/server";
 import { Server as IOServer } from "socket.io";
 import { Server as HTTPServer } from "http";
 
-const ioHandler = (req: NextApiRequest, res: any) => {
-  if (!res.socket.server.io) {
+export async function GET(req: NextRequest) {
+  if (!(global as any).io) {
     console.log("⚡ Initializing Socket.IO");
 
-    const httpServer: HTTPServer = res.socket.server as any;
+    const httpServer: HTTPServer = (global as any).server || (global as any).process?.server;
     const io = new IOServer(httpServer, {
       path: "/api/socket",
       cors: {
@@ -38,11 +38,9 @@ const ioHandler = (req: NextApiRequest, res: any) => {
       });
     });
 
-    res.socket.server.io = io;
+    (global as any).io = io;
   } else {
     console.log("⚡ Socket.IO already running");
   }
   return NextResponse.json({ message: "Socket.IO is running" });
-};
-
-export { ioHandler as GET, ioHandler as POST };
+}
